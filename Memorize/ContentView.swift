@@ -10,7 +10,10 @@ import SwiftData
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello World")
+        return RoundedRectangle(cornerRadius: 20)
+            .stroke(lineWidth: 3.0)
+            .padding(.horizontal)
+            .foregroundColor(.red)
     }
 }
 
