@@ -10,12 +10,35 @@ import SwiftData
 
 struct ContentView: View {
     var body: some View {
-        return RoundedRectangle(cornerRadius: 20)
-            .stroke(lineWidth: 3.0)
-            .padding(.horizontal)
-            .foregroundColor(.red)
+        ZStack {
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(lineWidth: 3.0)
+            Text("Hello world")
+        }
+        .padding(.horizontal)
+        .foregroundColor(.red)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
