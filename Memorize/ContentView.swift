@@ -9,15 +9,25 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    var emojis = ["🚄", "✈️", "🏍️", "🚁", "🛳️", "🛴", "🚜", "🚚",
-                  "🚃", "🚘", "🚠", "🚲", "🚌", "🚂", "🛥️", "⛵️"]
-    @State var emojiCount = 4
+    @State var emojis = [
+                    ["🚄", "✈️", "🏍️", "🚁", "🛳️", "🛴", "🚜", "🚚",
+                  "🚃", "🚘", "🚠", "🚲", "🚌", "🚂", "🛥️", "⛵️"],
+                    
+                    ["🐶", "🐱", "🐭", "🐹", "🦊", "🐷", "🐵", "🐧",
+                  "🐻", "🐯", "🐨", "🐮", "🐸", "🐰", "🐴", "🐺"],
+
+                    ["🍏", "🍣", "🥙", "🍟", "🍤", "🥟", "🍲", "🍜",
+                  "🍔", "🥬", "🫛", "🍞", "🍒", "🥨", "🍠", "🥯"]
+                    ]
+    @State var emojiCount = 16
+    @State var theme = 0
     
     var body: some View {
         VStack {
+            Text("Memorize!").font(.largeTitle)
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65, maximum: 100 ))]) {
-                    ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
+                    ForEach(emojis[theme][0..<emojiCount], id: \.self) { emoji in
                         CardView(content: emoji)
                             .aspectRatio(2/3, contentMode: .fit)
                     }
@@ -25,35 +35,17 @@ struct ContentView: View {
             }
             .foregroundColor(.red)
             Spacer()
-            HStack {
-                remove
-                Spacer()
-                add
+            Button {
+                theme += 1 
+                theme %= 3
+                emojis[theme].shuffle()
+                emojiCount = 3 * theme + 8
+            } label: {
+                Text("Change theme")
             }
-            .font(.largeTitle)
-            .padding(.horizontal)
+
         }
         .padding(.horizontal)
-        
-    }
-    
-    var remove: some View {
-        Button {
-            if emojiCount > 0 {
-                emojiCount -= 1
-            }
-        } label: {
-            Image(systemName: "minus.circle")
-        }
-    }
-    var add: some View {
-        Button {
-            if emojiCount < emojis.count {
-                emojiCount += 1
-            }
-        } label: {
-            Image(systemName: "plus.circle")
-        }
     }
 }
 
