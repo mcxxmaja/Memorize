@@ -9,25 +9,25 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State var emojis = [
-                    ["🚄", "✈️", "🏍️", "🚁", "🛳️", "🛴", "🚜", "🚚",
-                  "🚃", "🚘", "🚠", "🚲", "🚌", "🚂", "🛥️", "⛵️"],
-                    
-                    ["🐶", "🐱", "🐭", "🐹", "🦊", "🐷", "🐵", "🐧",
-                  "🐻", "🐯", "🐨", "🐮", "🐸", "🐰", "🐴", "🐺"],
 
-                    ["🍏", "🍣", "🥙", "🍟", "🍤", "🥟", "🍲", "🍜",
+    let vehicles = ["🚄", "✈️", "🏍️", "🚁", "🛳️", "🛴", "🚜", "🚚",
+                  "🚃", "🚘", "🚠", "🚲", "🚌", "🚂", "🛥️", "⛵️"]
+                    
+    let animals = ["🐶", "🐱", "🐭", "🐹", "🦊", "🐷", "🐵", "🐧",
+                  "🐻", "🐯", "🐨", "🐮", "🐸", "🐰", "🐴", "🐺"]
+
+    let food = ["🍏", "🍣", "🥙", "🍟", "🍤", "🥟", "🍲", "🍜",
                   "🍔", "🥬", "🫛", "🍞", "🍒", "🥨", "🍠", "🥯"]
-                    ]
+    
+    @State var emojis : [String] = []
     @State var emojiCount = 16
-    @State var theme = 0
     
     var body: some View {
         VStack {
             Text("Memorize!").font(.largeTitle)
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65, maximum: 100 ))]) {
-                    ForEach(emojis[theme][0..<emojiCount], id: \.self) { emoji in
+                    ForEach(emojis[0..<min(emojiCount,emojis.count)], id: \.self) { emoji in
                         CardView(content: emoji)
                             .aspectRatio(2/3, contentMode: .fit)
                     }
@@ -35,17 +35,43 @@ struct ContentView: View {
             }
             .foregroundColor(.red)
             Spacer()
-            Button {
-                theme += 1 
-                theme %= 3
-                emojis[theme].shuffle()
-                emojiCount = 3 * theme + 8
-            } label: {
-                Text("Change theme")
+            HStack {
+                Button {
+                    onButtonClick(theme: vehicles, cardCount: 15)
+                } label: {
+                    VStack {
+                        Image(systemName: "car").font(.title)
+                        Text("Vehicles").font(.footnote)
+                    }
+                }
+                .padding(.horizontal)
+                Button {
+                    onButtonClick(theme: animals, cardCount: 9)
+                } label: {
+                    VStack {
+                        Image(systemName: "hare").font(.title)
+                        Text("Animals").font(.footnote)
+                    }
+                }
+                .padding()
+                Button {
+                    onButtonClick(theme: food, cardCount: 12)
+                } label: {
+                    VStack {
+                        Image(systemName: "cart").font(.title)
+                        Text("Food").font(.footnote)
+                    }
+                }
+                .padding()
             }
-
         }
         .padding(.horizontal)
+    }
+    
+    func onButtonClick(theme: [String], cardCount: Int) {
+        emojis = theme
+        emojis.shuffle()
+        emojiCount = cardCount
     }
 }
 
