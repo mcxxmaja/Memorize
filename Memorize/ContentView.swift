@@ -36,9 +36,13 @@ struct ContentView: View {
             .foregroundColor(.red)
             Spacer()
             HStack {
-                themeButton(symbolName: "car", buttonText: "Vehicles", onClickMethod: {emojis = vehicles; emojis.shuffle(); cardCount = Int.random(in: 4..<emojis.count)})
-                themeButton(symbolName: "cart", buttonText: "Food", onClickMethod: {emojis = food; emojis.shuffle(); cardCount = Int.random(in: 4..<emojis.count)})
-                themeButton(symbolName: "hare", buttonText: "Animals", onClickMethod: {emojis = animals; emojis.shuffle(); cardCount = Int.random(in: 4..<emojis.count)})
+                let codeSnippet = {
+                    emojis.shuffle()
+                    cardCount = Int.random(in: 4..<emojis.count)
+                }
+                themeButton(symbolName: "car", buttonText: "Vehicles", onClickMethod: {emojis = vehicles; codeSnippet()})
+                themeButton(symbolName: "cart", buttonText: "Food", onClickMethod: {emojis = food; codeSnippet()})
+                themeButton(symbolName: "hare", buttonText: "Animals", onClickMethod: {emojis = animals; codeSnippet()})
             }
         }
         .padding(.horizontal)
