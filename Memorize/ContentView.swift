@@ -20,15 +20,14 @@ struct ContentView: View {
                   "🍔", "🥬", "🫛", "🍞", "🍒", "🥨", "🍠", "🥯"]
     
     @State var emojis : [String] = []
-    
-    @State var emojiCount = 16
+    @State var cardCount = 16
     
     var body: some View {
         VStack {
             Text("Memorize!").font(.largeTitle)
             ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 65, maximum: 100 ))]) {
-                    ForEach(emojis[0..<min(emojiCount,emojis.count)], id: \.self) { emoji in
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: widthThatBestFits(cardCount: cardCount), maximum: widthThatBestFits(cardCount: cardCount) ))]) {
+                    ForEach(emojis[0..<min(cardCount,emojis.count)], id: \.self) { emoji in
                         CardView(content: emoji)
                             .aspectRatio(2/3, contentMode: .fit)
                     }
@@ -37,19 +36,22 @@ struct ContentView: View {
             .foregroundColor(.red)
             Spacer()
             HStack {
-                themeButton(symbolName: "car", buttonText: "Vehicles", onClickMethod: {emojis = vehicles; emojis.shuffle(); emojiCount = 12})
-                themeButton(symbolName: "cart", buttonText: "Food", onClickMethod: {emojis = food; emojis.shuffle(); emojiCount = 15})
-                themeButton(symbolName: "hare", buttonText: "Animals", onClickMethod: {emojis = animals; emojis.shuffle(); emojiCount = 9})
+                themeButton(symbolName: "car", buttonText: "Vehicles", onClickMethod: {emojis = vehicles; emojis.shuffle(); cardCount = Int.random(in: 4..<emojis.count)})
+                themeButton(symbolName: "cart", buttonText: "Food", onClickMethod: {emojis = food; emojis.shuffle(); cardCount = Int.random(in: 4..<emojis.count)})
+                themeButton(symbolName: "hare", buttonText: "Animals", onClickMethod: {emojis = animals; emojis.shuffle(); cardCount = Int.random(in: 4..<emojis.count)})
             }
         }
         .padding(.horizontal)
     }
-    
-    func onButtonClick(theme: [String], cardCount: Int) {
-        emojis = theme
-        emojis.shuffle()
-        emojiCount = cardCount
+}
+
+func widthThatBestFits(cardCount: Int) -> CGFloat {
+    if cardCount > 9 { // 4 columns
+        return 75
+    } else if cardCount > 4 { // 3 columns
+        return 100
     }
+    return 150 // 2 columns
 }
 
 struct themeButton: View {
