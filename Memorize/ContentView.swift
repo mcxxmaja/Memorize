@@ -20,6 +20,7 @@ struct ContentView: View {
                   "🍔", "🥬", "🫛", "🍞", "🍒", "🥨", "🍠", "🥯"]
     
     @State var emojis : [String] = []
+    
     @State var emojiCount = 16
     
     var body: some View {
@@ -36,9 +37,9 @@ struct ContentView: View {
             .foregroundColor(.red)
             Spacer()
             HStack {
-                themeButton(emojis: food, symbolName: "cart", cardCount: 12, buttonText: "Food", onClickMethod: onButtonClick)
-                themeButton(emojis: vehicles, symbolName: "car", cardCount: 15, buttonText: "Vehicles", onClickMethod: onButtonClick)
-                themeButton(emojis: animals, symbolName: "hare", cardCount: 9, buttonText: "Animals", onClickMethod: onButtonClick)
+                themeButton(symbolName: "car", buttonText: "Vehicles", onClickMethod: {emojis = vehicles; emojis.shuffle(); emojiCount = 12})
+                themeButton(symbolName: "cart", buttonText: "Food", onClickMethod: {emojis = food; emojis.shuffle(); emojiCount = 15})
+                themeButton(symbolName: "hare", buttonText: "Animals", onClickMethod: {emojis = animals; emojis.shuffle(); emojiCount = 9})
             }
         }
         .padding(.horizontal)
@@ -52,16 +53,14 @@ struct ContentView: View {
 }
 
 struct themeButton: View {
-    var emojis: [String]
     var symbolName: String
-    var cardCount: Int
     var buttonText: String
-    var onClickMethod: (_ theme: [String], _ cardCount: Int) -> ()
+    var onClickMethod: () -> ()
 
     
     var body: some View {
         Button {
-            onClickMethod(emojis, cardCount)
+            onClickMethod()
         } label: {
             VStack {
                 Image(systemName: symbolName).font(.title)
