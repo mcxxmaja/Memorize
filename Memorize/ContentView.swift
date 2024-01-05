@@ -36,33 +36,9 @@ struct ContentView: View {
             .foregroundColor(.red)
             Spacer()
             HStack {
-                Button {
-                    onButtonClick(theme: vehicles, cardCount: 15)
-                } label: {
-                    VStack {
-                        Image(systemName: "car").font(.title)
-                        Text("Vehicles").font(.footnote)
-                    }
-                }
-                .padding(.horizontal)
-                Button {
-                    onButtonClick(theme: animals, cardCount: 9)
-                } label: {
-                    VStack {
-                        Image(systemName: "hare").font(.title)
-                        Text("Animals").font(.footnote)
-                    }
-                }
-                .padding()
-                Button {
-                    onButtonClick(theme: food, cardCount: 12)
-                } label: {
-                    VStack {
-                        Image(systemName: "cart").font(.title)
-                        Text("Food").font(.footnote)
-                    }
-                }
-                .padding()
+                themeButton(emojis: food, symbolName: "cart", cardCount: 12, buttonText: "Food", onClickMethod: onButtonClick)
+                themeButton(emojis: vehicles, symbolName: "car", cardCount: 15, buttonText: "Vehicles", onClickMethod: onButtonClick)
+                themeButton(emojis: animals, symbolName: "hare", cardCount: 9, buttonText: "Animals", onClickMethod: onButtonClick)
             }
         }
         .padding(.horizontal)
@@ -72,6 +48,27 @@ struct ContentView: View {
         emojis = theme
         emojis.shuffle()
         emojiCount = cardCount
+    }
+}
+
+struct themeButton: View {
+    var emojis: [String]
+    var symbolName: String
+    var cardCount: Int
+    var buttonText: String
+    var onClickMethod: (_ theme: [String], _ cardCount: Int) -> ()
+
+    
+    var body: some View {
+        Button {
+            onClickMethod(emojis, cardCount)
+        } label: {
+            VStack {
+                Image(systemName: symbolName).font(.title)
+                Text(buttonText).font(.footnote)
+            }
+        }
+        .padding()
     }
 }
 
@@ -135,6 +132,8 @@ struct CardView: View {
 #Preview {
     ContentView()
         .preferredColorScheme(.dark)
+        .previewInterfaceOrientation(.landscapeRight)
+    
 }
 
 #Preview {
