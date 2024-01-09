@@ -9,53 +9,20 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-
-    let vehicles = ["🚄", "✈️", "🏍️", "🚁", "🛳️", "🛴", "🚜", "🚚",
-                  "🚃", "🚘", "🚠", "🚲", "🚌", "🚂", "🛥️", "⛵️"]
-                    
-    let animals = ["🐶", "🐱", "🐭", "🐹", "🦊", "🐷", "🐵", "🐧",
-                  "🐻", "🐯", "🐨", "🐮", "🐸", "🐰", "🐴", "🐺"]
-
-    let food = ["🍏", "🍣", "🥙", "🍟", "🍤", "🥟", "🍲", "🍜",
-                  "🍔", "🥬", "🫛", "🍞", "🍒", "🥨", "🍠", "🥯"]
-    
-    @State var emojis : [String] = []
-    @State var cardCount = 16
+    var viewModel: EmojiMemoryGame
     
     var body: some View {
-        VStack {
-            Text("Memorize!").font(.largeTitle)
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: widthThatBestFits(cardCount: cardCount), maximum: widthThatBestFits(cardCount: cardCount) ))]) {
-                    ForEach(emojis[0..<min(cardCount,emojis.count)], id: \.self) { emoji in
-                        CardView(content: emoji)
-                            .aspectRatio(2/3, contentMode: .fit)
-                    }
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
+                ForEach(viewModel.cards) { card in
+                    CardView(card: card)
+                        .aspectRatio(2/3, contentMode: .fit)
                 }
-            }
-            .foregroundColor(.red)
-            Spacer()
-            HStack {
-                let codeSnippet = {
-                    emojis.shuffle()
-                    cardCount = Int.random(in: 4..<emojis.count)
-                }
-                themeButton(symbolName: "car", buttonText: "Vehicles", onClickMethod: {emojis = vehicles; codeSnippet()})
-                themeButton(symbolName: "cart", buttonText: "Food", onClickMethod: {emojis = food; codeSnippet()})
-                themeButton(symbolName: "hare", buttonText: "Animals", onClickMethod: {emojis = animals; codeSnippet()})
             }
         }
-        .padding(.horizontal)
+        .foregroundColor(.red)
+        .padding()
     }
-}
-
-func widthThatBestFits(cardCount: Int) -> CGFloat {
-    if cardCount > 9 { // 4 columns
-        return 75
-    } else if cardCount > 4 { // 3 columns
-        return 100
-    }
-    return 150 // 2 columns
 }
 
 struct themeButton: View {
@@ -78,22 +45,18 @@ struct themeButton: View {
 }
 
 struct CardView: View {
-    var content: String
-    @State var isFaceUp: Bool = true
+    let card: MemoryGame<String>.Card
     
     var body: some View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: 20)
-            if isFaceUp {
+            if card.isFaceUp {
                 shape.fill().foregroundColor(.white)
                 shape.strokeBorder(lineWidth: 3.0)
-                Text(content).font(.largeTitle)
+                Text(card.content).font(.largeTitle)
             } else {
                 shape.fill()
             }
-        }
-        .onTapGesture {
-            isFaceUp = !isFaceUp
         }
     }
 }
@@ -133,15 +96,16 @@ struct CardView: View {
 
 
 
+let game = EmojiMemoryGame()
 
 #Preview {
-    ContentView()
+    ContentView(viewModel: game)
         .preferredColorScheme(.dark)
         .previewInterfaceOrientation(.landscapeRight)
     
 }
 
 #Preview {
-    ContentView()
+    ContentView(viewModel: game)
         .preferredColorScheme(.light)
 }
