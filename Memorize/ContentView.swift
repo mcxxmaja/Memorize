@@ -53,10 +53,12 @@ struct CardView: View {
     var body: some View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: 20)
-            if card.isFaceUp {
+            if card.isFaceUp || card.isMatched {
                 shape.fill().foregroundColor(.white)
                 shape.strokeBorder(lineWidth: 3.0)
                 Text(card.content).font(.largeTitle)
+//            } else if card.isMatched {
+//                shape.opacity(0)
             } else {
                 shape.fill()
             }
