@@ -10,7 +10,7 @@ import SwiftData
 
 @main
 struct MemorizeApp: App {
-    let game = EmojiMemoryGame()
+    let game = EmojiMemoryGame(theme: .holiday)
     
     var body: some Scene {
         WindowGroup {

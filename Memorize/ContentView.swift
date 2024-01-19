@@ -28,25 +28,6 @@ struct ContentView: View {
     }
 }
 
-struct themeButton: View {
-    var symbolName: String
-    var buttonText: String
-    var onClickMethod: () -> ()
-
-    
-    var body: some View {
-        Button {
-            onClickMethod()
-        } label: {
-            VStack {
-                Image(systemName: symbolName).font(.title)
-                Text(buttonText).font(.footnote)
-            }
-        }
-        .padding()
-    }
-}
-
 struct CardView: View {
     let card: MemoryGame<String>.Card
     
@@ -101,7 +82,7 @@ struct CardView: View {
 
 
 
-let game = EmojiMemoryGame()
+let game = EmojiMemoryGame(theme: .holiday)
 
 #Preview {
     ContentView(viewModel: game)
