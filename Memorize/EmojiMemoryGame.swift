@@ -8,10 +8,9 @@
 import SwiftUI
 
 class EmojiMemoryGame : ObservableObject {
-    let choosenTheme: ThemeDetails
-    
-    //nie wiem czy viewmodel powinien cokolwiek trzymac.. czy theme powinno byc w modelu, ale z kolei to mowi o wygladzie i tam nie ma dostepu np do typu color
-    let themeMap: [Theme : ThemeDetails] = [
+    var choosenTheme: ThemeDetails
+
+    var themeMap: [Theme : ThemeDetails] = [
         .holiday : ThemeDetails(
             name: "Holiday",
             emojiSet: ["🏝️", "🏖️", "🚢", "🗺️", "🛳️", "⛱️", "☀️", "👙", "🩳", "🐚", "⛴️", "⛵️", "🛶", "🤿", "🍹", "🛫"],
@@ -29,13 +28,16 @@ class EmojiMemoryGame : ObservableObject {
             color: .orange)
     ]
     
-    static let emojis = ["🍏", "🍣", "🥙", "🍟", "🍤", "🥟", "🍲", "🍜", "🍔", "🥬", "🫛", "🍞", "🍒", "🥨", "🍠", "🥯"]
-    
-    static func createMemoryGame() -> MemoryGame<String> {
-        MemoryGame<String>(numberOfPairsOfCards: 5) {pairIndex in emojis[pairIndex] }
+    static func createMemoryGame(emojis: [String], pairCount: Int) -> MemoryGame<String> {
+        MemoryGame<String>(numberOfPairsOfCards: pairCount) {
+            pairIndex in emojis[pairIndex] }
     }
     
-    @Published private var model: MemoryGame<String> = createMemoryGame()
+    func getColor() -> Color {
+        return choosenTheme.color
+    }
+    
+    @Published private var model: MemoryGame<String>
     
     var cards: Array<MemoryGame<String>.Card> {
         return model.cards
@@ -48,7 +50,7 @@ class EmojiMemoryGame : ObservableObject {
     
     struct ThemeDetails {
         let name: String
-        let emojiSet: [String]
+        var emojiSet: [String]
         let pairCount: Int
         let color: Color
     }
@@ -60,6 +62,8 @@ class EmojiMemoryGame : ObservableObject {
     }
     
     init(theme: Theme) {
-        self.choosenTheme = themeMap[theme]!
+        choosenTheme = themeMap[theme]!
+        choosenTheme.emojiSet.shuffle()
+        model = EmojiMemoryGame.createMemoryGame(emojis: choosenTheme.emojiSet, pairCount: min(choosenTheme.pairCount, choosenTheme.emojiSet.count))
     }
 }

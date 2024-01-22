@@ -23,7 +23,7 @@ struct ContentView: View {
                 }
             }
         }
-        .foregroundColor(.red)
+        .foregroundColor(viewModel.getColor())
         .padding()
     }
 }
