@@ -8,33 +8,11 @@
 import SwiftUI
 
 class EmojiMemoryGame : ObservableObject {
-    var choosenTheme: ThemeDetails
-
-    var themeMap: [Theme : ThemeDetails] = [
-        .holiday : ThemeDetails(
-            name: "Holiday",
-            emojiSet: ["🏝️", "🏖️", "🚢", "🗺️", "🛳️", "⛱️", "☀️", "👙", "🩳", "🐚", "⛴️", "⛵️", "🛶", "🤿", "🍹", "🛫"],
-            pairCount: 5,
-            color: .blue),
-        .renovation : ThemeDetails(
-            name: "Renovation",
-            emojiSet: ["🔨", "🎨", "🖼️", "🛋️", "🪑", "🛏️"],
-            pairCount: 10,
-            color: .gray),
-        .sport:ThemeDetails(
-            name: "Sport",
-            emojiSet: ["⚽️", "🏀", "🏉", "🎾", "🏐", "🎱", "⚾️", "🥏", "🥎"],
-            pairCount: 6,
-            color: .orange)
-    ]
+    var choosenTheme: Theme
     
     static func createMemoryGame(emojis: [String], pairCount: Int) -> MemoryGame<String> {
         MemoryGame<String>(numberOfPairsOfCards: pairCount) {
             pairIndex in emojis[pairIndex] }
-    }
-    
-    func getColor() -> Color {
-        return choosenTheme.color
     }
     
     @Published private var model: MemoryGame<String>
@@ -48,22 +26,52 @@ class EmojiMemoryGame : ObservableObject {
         model.choose(card)
     }
     
-    struct ThemeDetails {
+    func newGame() {
+        let themeCount = themeList.count
+        choosenTheme = themeList[Int.random(in: 0..<themeCount)]
+        choosenTheme.emojiSet.shuffle()
+        model = EmojiMemoryGame.createMemoryGame(emojis: choosenTheme.emojiSet, pairCount: min(choosenTheme.pairCount, choosenTheme.emojiSet.count))
+    }
+    
+    init() {
+        let themeCount = themeList.count
+        choosenTheme = themeList[Int.random(in: 0..<themeCount)]
+        choosenTheme.emojiSet.shuffle()
+        model = EmojiMemoryGame.createMemoryGame(emojis: choosenTheme.emojiSet, pairCount: min(choosenTheme.pairCount, choosenTheme.emojiSet.count))
+    }
+    
+    var themeList: [Theme] = [
+        Theme(
+            name: "Holiday",
+            emojiSet: ["🏝️", "🏖️", "🚢", "🗺️", "🛳️", "⛱️", "☀️", "👙", "🩳", "🐚", "⛴️", "⛵️", "🛶", "🤿", "🍹", "🛫"],
+            pairCount: 5,
+            color: .blue),
+        Theme(
+            name: "Renovation",
+            emojiSet: ["🔨", "🎨", "🖼️", "🛋️", "🪑", "🛏️"],
+            pairCount: 10,
+            color: .gray),
+        Theme(
+            name: "Sport",
+            emojiSet: ["⚽️", "🏀", "🏉", "🎾", "🏐", "🎱", "⚾️", "🥏", "🥎"],
+            pairCount: 6,
+            color: .orange),
+        Theme(
+            name: "Fruit",
+            emojiSet: ["🍏", "🍊", "🍍", "🥝", "🫐", "🍓", "🍌", "🍋", "🍉", "🍐"],
+            pairCount: 8,
+            color: .pink),
+        Theme(
+            name: "Heart",
+            emojiSet: ["🩷", "❤️", "🧡", "💛", "💚", "🩵", "💙", "💜", "🤎", "🤍", "🩶", "🖤"],
+            pairCount: 12,
+            color: .white)
+    ]
+    
+    struct Theme {
         let name: String
         var emojiSet: [String]
         let pairCount: Int
         let color: Color
-    }
-    
-    enum Theme {
-        case holiday
-        case renovation
-        case sport
-    }
-    
-    init(theme: Theme) {
-        choosenTheme = themeMap[theme]!
-        choosenTheme.emojiSet.shuffle()
-        model = EmojiMemoryGame.createMemoryGame(emojis: choosenTheme.emojiSet, pairCount: min(choosenTheme.pairCount, choosenTheme.emojiSet.count))
     }
 }
