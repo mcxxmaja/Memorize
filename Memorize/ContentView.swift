@@ -28,7 +28,7 @@ struct ContentView: View {
             }
             .foregroundColor(viewModel.choosenTheme.color)
             .padding()
-            
+            Text("Score: \(viewModel.score)")
             Button {
                 viewModel.newGame()
             } label: {
