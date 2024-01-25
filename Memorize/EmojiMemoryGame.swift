@@ -8,14 +8,14 @@
 import SwiftUI
 
 class EmojiMemoryGame : ObservableObject {
-    var choosenTheme: Theme
+    
+    @Published private var model: MemoryGame<String>
+    var theme: Theme = Theme()
     
     static func createMemoryGame(emojis: [String], pairCount: Int) -> MemoryGame<String> {
         MemoryGame<String>(numberOfPairsOfCards: pairCount) {
             pairIndex in emojis[pairIndex] }
     }
-    
-    @Published private var model: MemoryGame<String>
     
     var cards: Array<MemoryGame<String>.Card> {
         return model.cards
@@ -31,51 +31,30 @@ class EmojiMemoryGame : ObservableObject {
     }
     
     func newGame() {
-        let themeCount = themeList.count
-        choosenTheme = themeList[Int.random(in: 0..<themeCount)]
-        choosenTheme.emojiSet.shuffle()
-        model = EmojiMemoryGame.createMemoryGame(emojis: choosenTheme.emojiSet, pairCount: min(choosenTheme.pairCount, choosenTheme.emojiSet.count))
+        theme.changeTheme()
+        model = EmojiMemoryGame.createMemoryGame(emojis: theme.choosenTheme.emojiSet, pairCount: min(theme.choosenTheme.pairCount, theme.choosenTheme.emojiSet.count))
     }
     
     init() {
-        let themeCount = themeList.count
-        choosenTheme = themeList[Int.random(in: 0..<themeCount)]
-        choosenTheme.emojiSet.shuffle()
-        model = EmojiMemoryGame.createMemoryGame(emojis: choosenTheme.emojiSet, pairCount: min(choosenTheme.pairCount, choosenTheme.emojiSet.count))
+        model = EmojiMemoryGame.createMemoryGame(emojis: theme.choosenTheme.emojiSet, pairCount: min(theme.choosenTheme.pairCount, theme.choosenTheme.emojiSet.count))
     }
     
-    var themeList: [Theme] = [
-        Theme(
-            name: "Holiday",
-            emojiSet: ["🏝️", "🏖️", "🚢", "🗺️", "🛳️", "⛱️", "☀️", "👙", "🩳", "🐚", "⛴️", "⛵️", "🛶", "🤿", "🍹", "🛫"],
-            pairCount: 5,
-            color: .blue),
-        Theme(
-            name: "Renovation",
-            emojiSet: ["🔨", "🎨", "🖼️", "🛋️", "🪑", "🛏️"],
-            pairCount: 10,
-            color: .gray),
-        Theme(
-            name: "Sport",
-            emojiSet: ["⚽️", "🏀", "🏉", "🎾", "🏐", "🎱", "⚾️", "🥏", "🥎"],
-            pairCount: 6,
-            color: .orange),
-        Theme(
-            name: "Fruit",
-            emojiSet: ["🍏", "🍊", "🍍", "🥝", "🫐", "🍓", "🍌", "🍋", "🍉", "🍐"],
-            pairCount: 8,
-            color: .pink),
-        Theme(
-            name: "Heart",
-            emojiSet: ["🩷", "❤️", "🧡", "💛", "💚", "🩵", "💙", "💜", "🤎", "🤍", "🩶", "🖤"],
-            pairCount: 12,
-            color: .white)
-    ]
-    
-    struct Theme {
-        let name: String
-        var emojiSet: [String]
-        let pairCount: Int
-        let color: Color
+    func getColor(color: String) -> Color? {
+        switch color {
+        case "blue":
+            return .blue
+        case "gray":
+            return .gray
+        case "orange":
+            return .orange
+        case "pink":
+            return .pink
+        case "red":
+            return .red
+        case "green":
+            return .green
+        default:
+            return nil
+        }
     }
 }

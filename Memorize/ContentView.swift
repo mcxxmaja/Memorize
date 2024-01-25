@@ -13,7 +13,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            Text(viewModel.choosenTheme.name).font(.title)
+            Text(viewModel.theme.choosenTheme.name).font(.title)
             
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
@@ -26,7 +26,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .foregroundColor(viewModel.choosenTheme.color)
+            .foregroundColor(viewModel.getColor(color: viewModel.theme.choosenTheme.color))
             .padding()
             Text("Score: \(viewModel.score)")
             Button {
@@ -52,6 +52,7 @@ struct CardView: View {
 //                shape.opacity(0)
             } else {
                 shape.fill()
+                shape.strokeBorder(lineWidth: 3.0)//.foregroundColor(.blue)
             }
         }
     }
