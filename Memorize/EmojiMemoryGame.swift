@@ -32,11 +32,19 @@ class EmojiMemoryGame : ObservableObject {
     
     func newGame() {
         theme.changeTheme()
-        model = EmojiMemoryGame.createMemoryGame(emojis: theme.choosenTheme.emojiSet, pairCount: min(theme.choosenTheme.pairCount, theme.choosenTheme.emojiSet.count))
+        model = EmojiMemoryGame.createMemoryGame(
+            emojis: theme.choosenTheme.emojiSet,
+            pairCount:
+                min(theme.choosenTheme.pairCount, theme.choosenTheme.emojiSet.count)
+        )
     }
     
     init() {
-        model = EmojiMemoryGame.createMemoryGame(emojis: theme.choosenTheme.emojiSet, pairCount: min(theme.choosenTheme.pairCount, theme.choosenTheme.emojiSet.count))
+        model = EmojiMemoryGame.createMemoryGame(
+            emojis: theme.choosenTheme.emojiSet,
+            pairCount:
+                min(theme.choosenTheme.pairCount, theme.choosenTheme.emojiSet.count)
+        )
     }
     
     func getColor(color: String) -> Color? {

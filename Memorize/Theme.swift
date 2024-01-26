@@ -12,7 +12,7 @@ struct Theme {
     
     init() {
         self.choosenTheme = themeList[Int.random(in: 0..<themeList.count)]
-        choosenTheme.shuffleEmojis() //TODO: theme nie powinien shufflowac raczej
+        choosenTheme.shuffleEmojis()
     }
     
     mutating func changeTheme() {
