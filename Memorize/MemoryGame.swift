@@ -9,7 +9,7 @@ import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
-    var score: Int = 0
+    private(set) var score: Int = 0
     private var indexOfTheOnlyFaceUpCard: Int?
     
     mutating func choose(_ chosenCard: Card) {

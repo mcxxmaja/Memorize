@@ -8,7 +8,7 @@
 import Foundation
 
 struct Theme {
-    var choosenTheme: ThemeDetails
+    private(set) var choosenTheme: ThemeDetails
     
     init() {
         self.choosenTheme = themeList[Int.random(in: 0..<themeList.count)]
@@ -20,7 +20,7 @@ struct Theme {
         choosenTheme.shuffleEmojis()
     }
     
-    var themeList: [ThemeDetails] = [
+    private var themeList: [ThemeDetails] = [
         ThemeDetails(
             name: "Holiday",
             emojiSet: ["🏝️", "🏖️", "🚢", "🗺️", "🛳️", "⛱️", "☀️", "👙", "🩳", "🐚", "⛴️", "⛵️", "🛶", "🤿", "🍹", "🛫"],

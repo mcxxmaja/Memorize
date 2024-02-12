@@ -10,7 +10,7 @@ import SwiftUI
 class EmojiMemoryGame : ObservableObject {
     
     @Published private var model: MemoryGame<String>
-    var theme: Theme = Theme()
+    private(set) var theme: Theme = Theme()
     
     static func createMemoryGame(emojis: [String], pairCount: Int) -> MemoryGame<String> {
         MemoryGame<String>(numberOfPairsOfCards: pairCount) {
@@ -62,7 +62,7 @@ class EmojiMemoryGame : ObservableObject {
         case "green":
             return .green
         default:
-            return nil
+            return .white
         }
     }
 }
