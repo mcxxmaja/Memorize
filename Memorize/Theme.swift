@@ -24,43 +24,72 @@ struct Theme {
         ThemeDetails(
             name: "Holiday",
             emojiSet: ["🏝️", "🏖️", "🚢", "🗺️", "🛳️", "⛱️", "☀️", "👙", "🩳", "🐚", "⛴️", "⛵️", "🛶", "🤿", "🍹", "🛫"],
-            pairCount: 5,
-            color: "blue"),
+            color: "blue", 
+            numOfPairsToGenerate: 8),
         ThemeDetails(
             name: "Renovation",
             emojiSet: ["🔨", "🎨", "🖼️", "🛋️", "🪑", "🛏️"],
-            pairCount: 10,
-            color: "gray"),
+            color: "gray",
+            numOfPairsToGenerate: 10),
         ThemeDetails(
             name: "Sport",
             emojiSet: ["⚽️", "🏀", "🏉", "🎾", "🏐", "🎱", "⚾️", "🥏", "🥎"],
-            pairCount: 6,
-            color: "orange"),
+            color: "orange", 
+            numOfPairsToGenerate: 9),
         ThemeDetails(
             name: "Fruit",
             emojiSet: ["🍏", "🍊", "🍍", "🥝", "🫐", "🍓", "🍌", "🍋", "🍉", "🍐"],
-            pairCount: 8,
-            color: "green"),
+            color: "green",
+            numOfPairsToGenerate: .randomNumber),
         ThemeDetails(
             name: "Heart",
             emojiSet: ["🩷", "❤️", "🧡", "💛", "💚", "🩵", "💙", "💜", "🤎", "🤍", "🩶", "🖤"],
-            pairCount: 12,
-            color: "pink"),
+            color: "pink", 
+            numOfPairsToGenerate: .randomNumber),
         ThemeDetails(
             name: "Cards",
             emojiSet: ["♠️", "♣️", "♥️", "♦️"],
-            pairCount: 10,
-            color: "red")
+            color: "red", 
+            numOfPairsToGenerate: .maxNumber)
     ]
 
     struct ThemeDetails {
         let name: String
         var emojiSet: [String]
-        let pairCount: Int
+        private var pairCountAssigned: Int?
         let color: String
+        
+        var pairCount: Int {
+            get {
+                pairCountAssigned ?? Int.random(in: 2...emojiSet.count)
+            }
+        }
+
+        // SPECIFIC NUMBER
+        init(name: String, emojiSet: [String], color: String, numOfPairsToGenerate pairCount: Int) {
+            self.name = name
+            self.emojiSet = emojiSet
+            self.color = color
+            self.pairCountAssigned = pairCount
+        }
+        
+        // EMOJI COUNT / RANDOM NUMBER
+        init(name: String, emojiSet: [String], color: String, numOfPairsToGenerate: GenerateCards) {
+            self.name = name
+            self.emojiSet = emojiSet
+            self.color = color
+            if .maxNumber == numOfPairsToGenerate {
+                self.pairCountAssigned = emojiSet.count
+            }
+        }
         
         mutating func shuffleEmojis() {
             emojiSet.shuffle()
+        }
+        
+        enum GenerateCards {
+            case randomNumber
+            case maxNumber
         }
     }
 }
