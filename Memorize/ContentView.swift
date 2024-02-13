@@ -47,12 +47,12 @@ struct CardView: View {
             if card.isFaceUp || card.isMatched {
                 shape.fill().foregroundColor(.white)
                 shape.strokeBorder(lineWidth: 3.0)
-                Text(card.content).font(.largeTitle)
-//            } else if card.isMatched {
-//                shape.opacity(0)
+                Text(card.content)
+                    .font(.largeTitle)
+                    .padding(1) //.frame(width: 50, height: 50)
             } else {
                 shape.fill()
-                shape.strokeBorder(lineWidth: 3.0)//.foregroundColor(.blue)
+                shape.strokeBorder(lineWidth: 3.0)
             }
         }
     }
