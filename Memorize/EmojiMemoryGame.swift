@@ -25,6 +25,15 @@ class EmojiMemoryGame : ObservableObject {
         return model.score
     }
     
+    var color: Gradient {
+        let colorsStr: [String] = theme.choosenTheme.color
+        var colorsCol: [Color] = []
+        for colorStr in colorsStr {
+            colorsCol.append(EmojiMemoryGame.getColor(color: colorStr))
+        }
+        return Gradient(colors: colorsCol)
+    }
+    
     // MARK - Intents
     func choose(_ card: MemoryGame<String>.Card) {
         model.choose(card)
@@ -47,7 +56,7 @@ class EmojiMemoryGame : ObservableObject {
         )
     }
     
-    func getColor(color: String) -> Color? {
+    static func getColor(color: String) -> Color {
         switch color {
         case "blue":
             return .blue
@@ -61,6 +70,12 @@ class EmojiMemoryGame : ObservableObject {
             return .red
         case "green":
             return .green
+        case "black":
+            return .black
+        case "cyan":
+            return .cyan
+        case "yellow":
+            return .yellow
         default:
             return .white
         }
