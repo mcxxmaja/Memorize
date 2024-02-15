@@ -27,7 +27,9 @@ struct ContentView: View {
                 }
             }
             .padding()
-            Text("Score: \(viewModel.score)")
+            Text("Score: \(viewModel.score)") //TODO: format better
+            Text("Last Tap: \(viewModel.lastTapTime.formatted())") //TODO: remove
+            Text("Tap interval: \(viewModel.model.tapInterval)")
             Button {
                 viewModel.newGame()
             } label: {

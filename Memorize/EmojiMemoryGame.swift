@@ -9,7 +9,7 @@ import SwiftUI
 
 class EmojiMemoryGame : ObservableObject {
     
-    @Published private var model: MemoryGame<String>
+    @Published var model: MemoryGame<String> //TODO: make it private
     private(set) var theme: Theme = Theme()
     
     static func createMemoryGame(emojis: [String], pairCount: Int) -> MemoryGame<String> {
@@ -21,8 +21,12 @@ class EmojiMemoryGame : ObservableObject {
         return model.cards
     }
     
-    var score: Int {
+    var score: Double {
         return model.score
+    }
+    
+    var lastTapTime: Date {
+        return model.lastTapTime
     }
     
     var color: Gradient {

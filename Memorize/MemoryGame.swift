@@ -9,8 +9,10 @@ import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
-    private(set) var score: Int = 0
+    private(set) var score: Double = 0
     private var indexOfTheOnlyFaceUpCard: Int?
+    private(set) var lastTapTime: Date = Date(timeInterval: 0, since: .now)
+    var tapInterval: Double = 0 //TODO: does it need to be stored?
     
     mutating func choose(_ chosenCard: Card) {
         if let chosenIndex = getIndexOf(chosenCard),
@@ -21,7 +23,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 if isMatch(chosenCard, cards[potentialMatchIndex]) {
                     markMatched(cardIndex: potentialMatchIndex)
                     markMatched(cardIndex: chosenIndex)
-                    adjustScore(by: 2)
+                    addPointsForMatch()
                 }
                 indexOfTheOnlyFaceUpCard = nil
             } else {
@@ -30,11 +32,12 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 indexOfTheOnlyFaceUpCard = chosenIndex
             }
             if chosenCard.hasBeenSeen == true {
-                adjustScore(by: -1)
+                distractPoitsForSeeingItAlready()
             }
             cards[chosenIndex].isFaceUp.toggle()
             cards[chosenIndex].hasBeenSeen = true
         }
+        updateLastTapTime()
     }
     
     mutating func markMatched(cardIndex: Int) {
@@ -47,8 +50,24 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         }
     }
     
-    mutating func adjustScore(by amount: Int) {
+    mutating func distractPoitsForSeeingItAlready() {
+        let amount = 1 * tapInterval
+        adjustScore(by: -amount)
+    }
+    
+    mutating func addPointsForMatch() { //TODO: refactor
+        let amount = 2 / tapInterval
+        adjustScore(by: amount)
+    }
+    
+    
+    mutating func adjustScore(by amount: Double) {
         score += amount
+    }
+    
+    mutating func updateLastTapTime() {
+        tapInterval = lastTapTime.distance(to: .now)
+        lastTapTime = .now
     }
 
     func getIndexOf(_ card: Card) -> Int? {

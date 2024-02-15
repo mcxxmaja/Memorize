@@ -24,7 +24,7 @@ struct Theme {
         ThemeDetails(
             name: "Holiday",
             emojiSet: ["🏝️", "🏖️", "🚢", "🗺️", "🛳️", "⛱️", "☀️", "👙", "🩳", "🐚", "⛴️", "⛵️", "🛶", "🤿", "🍹", "🛫"],
-            color: ["blue"],
+            color: ["blue", "elo"],
             numOfPairsToGenerate: 8),
         ThemeDetails(
             name: "Renovation",
