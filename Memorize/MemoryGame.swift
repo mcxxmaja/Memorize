@@ -12,7 +12,9 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var score: Double = 0
     private var indexOfTheOnlyFaceUpCard: Int?
     private(set) var lastTapTime: Date = Date(timeInterval: 0, since: .now)
-    var tapInterval: Double = 0 //TODO: does it need to be stored?
+    var tapInterval: Double {
+        lastTapTime.distance(to: .now)
+    }
     
     mutating func choose(_ chosenCard: Card) {
         if let chosenIndex = getIndexOf(chosenCard),
@@ -23,7 +25,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 if isMatch(chosenCard, cards[potentialMatchIndex]) {
                     markMatched(cardIndex: potentialMatchIndex)
                     markMatched(cardIndex: chosenIndex)
-                    addPointsForMatch()
+                    addPoints(amount: 2)
                 }
                 indexOfTheOnlyFaceUpCard = nil
             } else {
@@ -32,7 +34,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 indexOfTheOnlyFaceUpCard = chosenIndex
             }
             if chosenCard.hasBeenSeen == true {
-                distractPoitsForSeeingItAlready()
+                distractPoints(amount: 1)
             }
             cards[chosenIndex].isFaceUp.toggle()
             cards[chosenIndex].hasBeenSeen = true
@@ -50,14 +52,14 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         }
     }
     
-    mutating func distractPoitsForSeeingItAlready() {
-        let amount = 1 * tapInterval
-        adjustScore(by: -amount)
+    mutating func distractPoints(amount: Int) {
+        let multiplied: Double = Double(amount) * tapInterval
+        adjustScore(by: -multiplied)
     }
     
-    mutating func addPointsForMatch() { //TODO: refactor
-        let amount = 2 / tapInterval
-        adjustScore(by: amount)
+    mutating func addPoints(amount: Int) {
+        let multiplied: Double = Double(amount) / tapInterval
+        adjustScore(by: multiplied)
     }
     
     
@@ -66,7 +68,6 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     mutating func updateLastTapTime() {
-        tapInterval = lastTapTime.distance(to: .now)
         lastTapTime = .now
     }
 

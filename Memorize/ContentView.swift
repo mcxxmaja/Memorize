@@ -27,9 +27,9 @@ struct ContentView: View {
                 }
             }
             .padding()
-            Text("Score: \(viewModel.score)") //TODO: format better
-            Text("Last Tap: \(viewModel.lastTapTime.formatted())") //TODO: remove
-            Text("Tap interval: \(viewModel.model.tapInterval)")
+            let score = String(format: "%.1f", viewModel.score)
+            Text("Score: \(score)")
+//            Text("Tap interval: \(viewModel.model.tapInterval)")
             Button {
                 viewModel.newGame()
             } label: {
