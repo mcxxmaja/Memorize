@@ -16,7 +16,7 @@ struct EmojiMemoryGameView: View {
             Text(game.theme.choosenTheme.name).font(.title)
             
             ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
                     ForEach(game.cards) { card in
                         CardView(card: card, color: game.color)
                             .aspectRatio(2/3, contentMode: .fit)
@@ -29,7 +29,6 @@ struct EmojiMemoryGameView: View {
             .padding()
             let score = String(format: "%.1f", game.score)
             Text("Score: \(score)")
-//            Text("Tap interval: \(viewModel.model.tapInterval)")
             Button {
                 game.newGame()
             } label: {
@@ -44,19 +43,29 @@ struct CardView: View {
     let color: Gradient
     
     var body: some View {
-        ZStack {
-            let shape = RoundedRectangle(cornerRadius: 20)
-            if card.isFaceUp || card.isMatched {
-                shape.fill().foregroundColor(.white)
-                shape.strokeBorder(lineWidth: 3.0)
-                Text(card.content)
-                    .font(.largeTitle)
-                    .padding(1) //.frame(width: 50, height: 50)
-            } else {
-                shape.fill(color)
-                shape.strokeBorder(lineWidth: 3.0)
+        GeometryReader(content: { geometry in
+            ZStack {
+                let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornetRadius)
+                if card.isFaceUp || card.isMatched {
+                    shape.fill().foregroundColor(.white)
+                    shape.strokeBorder(lineWidth: 3.0)
+                    Text(card.content).font(font(of: geometry.size))
+                } else {
+                    shape.fill(color)
+                    shape.strokeBorder(lineWidth: DrawingConstants.lineWidth)
+                }
             }
-        }
+        })
+    }
+     
+    private func font(of size: CGSize) -> Font {
+        Font.system(size: DrawingConstants.fontScale * min(size.width, size.height))
+    }
+    
+    private struct DrawingConstants {
+        static let cornetRadius: CGFloat = 20
+        static let lineWidth: CGFloat = 3
+        static let fontScale: CGFloat = 0.8
     }
 }
 
