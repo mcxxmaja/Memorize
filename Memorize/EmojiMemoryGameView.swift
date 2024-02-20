@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  EmojiMemoryGameView.swift
 //  Memorize
 //
 //  Created by Maja on 27/12/2023.
@@ -8,30 +8,30 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
-    @ObservedObject var viewModel: EmojiMemoryGame
+struct EmojiMemoryGameView: View {
+    @ObservedObject var game: EmojiMemoryGame
     
     var body: some View {
         VStack {
-            Text(viewModel.theme.choosenTheme.name).font(.title)
+            Text(game.theme.choosenTheme.name).font(.title)
             
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
-                    ForEach(viewModel.cards) { card in
-                        CardView(card: card, color: viewModel.color)
+                    ForEach(game.cards) { card in
+                        CardView(card: card, color: game.color)
                             .aspectRatio(2/3, contentMode: .fit)
                             .onTapGesture {
-                                viewModel.choose(card)
+                                game.choose(card)
                             }
                     }
                 }
             }
             .padding()
-            let score = String(format: "%.1f", viewModel.score)
+            let score = String(format: "%.1f", game.score)
             Text("Score: \(score)")
 //            Text("Tap interval: \(viewModel.model.tapInterval)")
             Button {
-                viewModel.newGame()
+                game.newGame()
             } label: {
                 Text("New Game").font(.title)
             }
@@ -40,7 +40,7 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-    let card: MemoryGame<String>.Card
+    let card: EmojiMemoryGame.Card
     let color: Gradient
     
     var body: some View {
@@ -98,13 +98,13 @@ struct CardView: View {
 let game = EmojiMemoryGame()
 
 #Preview {
-    ContentView(viewModel: game)
+    EmojiMemoryGameView(game: game)
         .preferredColorScheme(.dark)
         .previewInterfaceOrientation(.landscapeRight)
     
 }
 
 #Preview {
-    ContentView(viewModel: game)
+    EmojiMemoryGameView(game: game)
         .preferredColorScheme(.light)
 }

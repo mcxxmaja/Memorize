@@ -10,8 +10,12 @@ import Foundation
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
     private(set) var score: Double = 0
-    private var indexOfTheOnlyFaceUpCard: Int?
-    private(set) var lastTapTime: Date = Date(timeInterval: 0, since: .now)
+    private(set) var lastTapTime = Date(timeInterval: 0, since: .now)
+    private var indexOfTheOnlyFaceUpCard: Int? {
+        get { cards.indices.filter({ cards[$0].isFaceUp }).oneAndOnly }
+        set { cards.indices.forEach{ cards[$0].isFaceUp = ($0 == newValue) } }
+    }
+    
     var tapInterval: Double {
         lastTapTime.distance(to: .now)
     }
@@ -20,23 +24,21 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         if let chosenIndex = getIndexOf(chosenCard),
            !cards[chosenIndex].isFaceUp
         {
-            if let potentialMatchIndex = indexOfTheOnlyFaceUpCard {
-                // second card uncovered
-                if isMatch(chosenCard, cards[potentialMatchIndex]) {
-                    markMatched(cardIndex: potentialMatchIndex)
+            if let indexOfTheOnlyFaceUpCard {
+                // second card tapped
+                if isMatch(chosenCard, cards[indexOfTheOnlyFaceUpCard]) {
+                    markMatched(cardIndex: indexOfTheOnlyFaceUpCard)
                     markMatched(cardIndex: chosenIndex)
                     addPoints(amount: 2)
                 }
-                indexOfTheOnlyFaceUpCard = nil
+                cards[chosenIndex].isFaceUp.toggle()
             } else {
-                // first card uncovered
-                coverAllCards()
+                // first card tapped
                 indexOfTheOnlyFaceUpCard = chosenIndex
             }
             if chosenCard.hasBeenSeen == true {
                 distractPoints(amount: 1)
             }
-            cards[chosenIndex].isFaceUp.toggle()
             cards[chosenIndex].hasBeenSeen = true
         }
         updateLastTapTime()
@@ -44,12 +46,6 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     
     mutating func markMatched(cardIndex: Int) {
         cards[cardIndex].isMatched = true
-    }
-    
-    mutating func coverAllCards() {
-        for index in cards.indices {
-            cards[index].isFaceUp = false
-        }
     }
     
     mutating func distractPoints(amount: Int) {
@@ -80,7 +76,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
-        cards = Array<Card>()
+        cards = []
         for pairIndex in 0..<numberOfPairsOfCards {
             let content: CardContent = createCardContent(pairIndex)
             cards.append(Card(id: pairIndex * 2, content: content))
@@ -90,10 +86,16 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     struct Card: Identifiable{
-        var id: Int
-        var content: CardContent
-        var isFaceUp: Bool = false
-        var isMatched: Bool = false
-        var hasBeenSeen: Bool = false
+        let id: Int
+        let content: CardContent
+        var isFaceUp = false
+        var isMatched = false
+        var hasBeenSeen = false
+    }
+}
+
+extension Array {
+    var oneAndOnly: Element? {
+        return count == 1 ? first : nil
     }
 }
